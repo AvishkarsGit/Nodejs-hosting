@@ -3,6 +3,8 @@
 - Prepare the vps environment
 - Setup MongoDB Atlas on vps
 - Deploy your node js and express app
+- Configure Nginx proxy server
+- Setting up SSL certificate for your secure https 
 
 ### 1. Prepare the vps environment
 
@@ -119,4 +121,98 @@ pm2 startup
 ```
 ```
 pm2 save
+```
+
+
+#### Allowing backend port in firewall
+```
+sudo ufw status
+```
+
+#### if firewall is disable, then enable it
+```
+sudo ufw enable
+```
+
+```
+sudo ufw allow 'OpenSSH'
+```
+
+#### you should have to enter your port
+```
+sudo ufw allow 3000
+```
+
+### 4. Configure Nginx server
+#### install Nginx
+```
+sudo apt install -y nginx
+```
+
+#### add nginx in firewall
+```
+sudo ufw status
+```
+```
+sudo ufw allow 'Nginx Full'
+```
+
+
+####  Configure Nginx for Nodejs Backend
+
+```
+nano /etc/nginx/sites-available/yourdomain2.com.conf
+```
+
+#### host setup for nginx
+```
+server {
+    listen 80;
+    server_name yourdomain.com;
+
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+```
+
+#### Create symbolic links to enable the sites.
+```
+ln -s /etc/nginx/sites-available/yourdomain1.com.conf /etc/nginx/sites-enabled/
+```
+
+#### Test the Nginx configuration for syntax errors.
+```
+nginx -t
+```
+
+```
+systemctl restart nginx
+```
+
+#### Connect Domain Name with Website
+#### Point all your domain & sub-domain on VPS IP address by adding DNS records in your domain manager
+
+#### Now your website will be live on domain name
+
+
+### 5. Setting up SSL Certificates
+#### install certbot
+```
+sudo apt install -y certbot python3-certbot-nginx
+```
+
+#### Obtain SSL Certificates
+
+```
+certbot --nginx -d yourdomain1.com 
+```
+#### Verify Auto-Renewal
+```
+certbot renew --dry-run
 ```
