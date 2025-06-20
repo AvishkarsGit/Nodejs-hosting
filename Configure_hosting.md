@@ -65,5 +65,58 @@ sudo apt install -y git
 
 ### 3. Deploying the Express and Node.js Backend
 
-#### You are in the terminal now
-####
+#### Go to terminal
+#### make directory
+```
+mkdir /var/www
+```
+
+#### then
+
+```
+cd /var/www
+```
+
+#### clone your git repo
+```
+git clone <repo_link>
+```
+
+#### Go to your repo folder inside /var/www
+```
+cd your_repo
+```
+
+#### install all required dependencies
+```
+npm install
+```
+
+#### Create .env file on vps server
+
+```
+nano .env
+```
+
+#### add environment variables then save and exit.
+#### (Ctrl + X) - Exit
+#### And select Y and enter
+
+#### install pm2 to start backend service
+```
+npm install -g pm2
+```
+
+#### start server (in your case server file should be: server.js or main.js)
+
+```
+pm2 start app.js --name backend-project
+```
+
+#### start backend on startup and save
+```
+pm2 startup
+```
+```
+pm2 save
+```
