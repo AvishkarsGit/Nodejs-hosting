@@ -168,7 +168,7 @@ nano /etc/nginx/sites-available/yourdomain2.com.conf
 ```
 server {
     listen 80;
-    server_name yourdomain.com;
+    server_name yourdomain.com www.yourdomain.com;
 
     location / {
         proxy_pass http://localhost:3000;
